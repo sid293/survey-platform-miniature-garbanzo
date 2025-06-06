@@ -11,22 +11,41 @@ class ApiClient {
 
   async request(endpoint: string, options: RequestInit = {}) {
     const url = `${API_BASE_URL}${endpoint}`
+    console.log("making request to : ", url)
     
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        ...this.getAuthHeaders(),
-        ...options.headers
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          ...this.getAuthHeaders(),
+          ...options.headers
+        }
+      })
+
+      const data = await response.json()
+      console.log("got response back: ", data)
+
+      if (!response.ok) {
+        // Create a more detailed error
+        const error = new Error(data.message || 'API request failed')
+        // Add additional properties to the error
+        Object.assign(error, {
+          status: response.status,
+          statusText: response.statusText,
+          data: data
+        })
+        throw error
       }
-    })
 
-    const data = await response.json()
-
-    if (!response.ok) {
-      throw new Error(data.message || 'API request failed')
+      return data
+    } catch (error: any) {
+      // If it's already an Error object, just rethrow it
+      if (error instanceof Error) {
+        throw error
+      }
+      // Otherwise, create a new Error
+      throw new Error(error.message || 'API request failed')
     }
-
-    return data
   }
 
   // Authentication

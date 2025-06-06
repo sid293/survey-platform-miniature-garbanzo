@@ -20,11 +20,17 @@ export async function registerUser(email, password, name) {
         });
         
         await user.save();
-        
+        const token = jwt.sign(
+            { userId: user._id, email: user.email },
+            process.env.JWT_SECRET || 'your-secret-key',
+            { expiresIn: '24h' }
+        );
+
         return {
             success: true, 
             message: "User created", 
-            data: { user }, 
+            data: { user },
+            token
         };
     } catch (error) {
         console.error("Error creating user:", error);

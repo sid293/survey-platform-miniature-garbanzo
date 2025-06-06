@@ -38,7 +38,9 @@ export default function EditSurveyPage({ params }: { params: { id: string } }) {
 
   const fetchSurvey = async () => {
     try {
+        console.log("getting survey, params id: ",params.id)
       const response = await apiClient.getSurvey(params.id)
+        console.log("response: ",response)
       setSurvey(response.data.survey)
     } catch (error) {
       handleApiError(error)

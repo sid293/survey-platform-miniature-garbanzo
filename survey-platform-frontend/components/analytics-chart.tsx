@@ -31,9 +31,17 @@ interface AnalyticsChartProps {
       fill?: boolean
     }[]
   }
+  options?: {
+    plugins?: {
+      legend?: {
+        position?: "top" | "right" | "bottom" | "left" | "center" | "chartArea"
+        display?: boolean
+      }
+    }
+  }
 }
 
-export default function AnalyticsChart({ type, data }: AnalyticsChartProps) {
+export default function AnalyticsChart({ type, data, options }: AnalyticsChartProps) {
   // Options
   const lineOptions = {
     responsive: true,
@@ -41,6 +49,7 @@ export default function AnalyticsChart({ type, data }: AnalyticsChartProps) {
     plugins: {
       legend: {
         position: "top" as const,
+        ...options?.plugins?.legend
       },
     },
     scales: {
@@ -56,6 +65,7 @@ export default function AnalyticsChart({ type, data }: AnalyticsChartProps) {
     plugins: {
       legend: {
         position: "top" as const,
+        ...options?.plugins?.legend
       },
     },
     scales: {
@@ -72,6 +82,7 @@ export default function AnalyticsChart({ type, data }: AnalyticsChartProps) {
     plugins: {
       legend: {
         position: "top" as const,
+        ...options?.plugins?.legend
       },
     },
     scales: {
@@ -87,6 +98,7 @@ export default function AnalyticsChart({ type, data }: AnalyticsChartProps) {
     plugins: {
       legend: {
         position: "right" as const,
+        ...options?.plugins?.legend
       },
     },
   }

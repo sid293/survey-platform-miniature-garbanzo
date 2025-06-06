@@ -65,7 +65,9 @@ export default function SurveysPage() {
 
   const fetchSurveys = async () => {
     try {
+      console.log("fetch surveys start: ")
       const response = await apiClient.getSurveys()
+      console.log("response for surveys: ",response)
       setSurveys(response.data.surveys)
     } catch (error) {
       handleApiError(error)
@@ -111,62 +113,65 @@ export default function SurveysPage() {
     }
   }
 
-  const deleteSurvey = (id: string) => {
-    // Remove from state
-    const updatedSurveys = surveys.filter((survey) => survey.id !== id)
-    setSurveys(updatedSurveys)
-    setSelectedSurveys(selectedSurveys.filter((surveyId) => surveyId !== id))
+  const deleteSurvey = async (id: string) => {
+    try {
+      await apiClient.deleteSurvey(id)
+      // Remove from state
+      const updatedSurveys = surveys.filter((survey) => survey.id !== id)
+      setSurveys(updatedSurveys)
+      setSelectedSurveys(selectedSurveys.filter((surveyId) => surveyId !== id))
 
-    // Update localStorage
-    localStorage.setItem("surveys", JSON.stringify(updatedSurveys))
-
-    toast({
-      title: "Survey Deleted",
-      description: "The survey has been permanently deleted.",
-    })
-  }
-
-  const deleteSelectedSurveys = () => {
-    // Remove from state
-    const updatedSurveys = surveys.filter((survey) => !selectedSurveys.includes(survey.id))
-    setSurveys(updatedSurveys)
-    setSelectedSurveys([])
-
-    // Update localStorage
-    localStorage.setItem("surveys", JSON.stringify(updatedSurveys))
-
-    toast({
-      title: "Surveys Deleted",
-      description: `${selectedSurveys.length} surveys have been permanently deleted.`,
-    })
-  }
-
-  const duplicateSurvey = (id: string) => {
-    const surveyToDuplicate = surveys.find((survey) => survey.id === id)
-    if (!surveyToDuplicate) return
-
-    const newSurvey = {
-      ...surveyToDuplicate,
-      id: `${Date.now()}`,
-      title: `${surveyToDuplicate.title} (Copy)`,
-      responses_count: 0,
-      questions_count: 0,
-      status: "draft",
-      created_at: format(new Date(), "yyyy-MM-dd"),
-      updated_at: format(new Date(), "yyyy-MM-dd"),
+      toast({
+        title: "Survey Deleted",
+        description: "The survey has been permanently deleted.",
+      })
+    } catch (error) {
+      handleApiError(error)
     }
+  }
 
-    // Update state
-    const updatedSurveys = [...surveys, newSurvey]
-    setSurveys(updatedSurveys)
+  const deleteSelectedSurveys = async () => {
+    try {
+      // Delete each selected survey
+      await Promise.all(selectedSurveys.map(id => apiClient.deleteSurvey(id)))
+      
+      // Remove from state
+      const updatedSurveys = surveys.filter((survey) => !selectedSurveys.includes(survey.id))
+      setSurveys(updatedSurveys)
+      setSelectedSurveys([])
 
-    // Update localStorage
-    localStorage.setItem("surveys", JSON.stringify(updatedSurveys))
+      toast({
+        title: "Surveys Deleted",
+        description: `${selectedSurveys.length} surveys have been permanently deleted.`,
+      })
+    } catch (error) {
+      handleApiError(error)
+    }
+  }
 
-    toast({
-      title: "Survey Duplicated",
-      description: "A copy of the survey has been created as a draft.",
-    })
+  const duplicateSurvey = async (id: string) => {
+    try {
+      const surveyToDuplicate = surveys.find((survey) => survey.id === id)
+      if (!surveyToDuplicate) return
+
+      const newSurvey = {
+        title: `${surveyToDuplicate.title} (Copy)`,
+        description: surveyToDuplicate.description,
+        questions: [] // You'll need to fetch the questions if needed
+      }
+
+      const response = await apiClient.createSurvey(newSurvey)
+      
+      // Update state with the new survey
+      setSurveys([...surveys, response.data.survey])
+
+      toast({
+        title: "Survey Duplicated",
+        description: "A copy of the survey has been created as a draft.",
+      })
+    } catch (error) {
+      handleApiError(error)
+    }
   }
 
   const getStatusBadge = (status: string) => {
@@ -322,7 +327,7 @@ export default function SurveysPage() {
                   <span>{survey.responses_count} responses</span>
                 </div>
                 <div className="mt-4 flex justify-between">
-                  <Link href={`/surveys/${survey.id}`}>
+                  <Link href={`/surveys/${survey.id}/edit`}>
                     <Button variant="outline">View</Button>
                   </Link>
                   <Link href={`/surveys/${survey.id}/responses`}>

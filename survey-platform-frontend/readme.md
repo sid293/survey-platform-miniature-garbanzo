@@ -1,5 +1,5 @@
-Todo: 
 
-- get right data from each endpoint and write todos. 
-- implemnt todos in controller and services.
-- make sure you are sending right data back. test using postman. 
+- frontend integration
+- push
+
+- if not login not automatically sending to login/ register

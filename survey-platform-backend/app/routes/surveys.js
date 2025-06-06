@@ -32,6 +32,7 @@ router.get("/", authenticateToken, async (req, res) => {
 
 router.get("/:id", authenticateToken, async (req, res) => {
     try {
+        console.log("getting specific survey: ",req.params.id,req.user.userId )
         const survey = await getSurveyById(req.params.id, req.user.userId);
         res.json({
             success: true,

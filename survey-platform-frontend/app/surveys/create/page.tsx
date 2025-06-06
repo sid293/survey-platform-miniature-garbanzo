@@ -24,6 +24,13 @@ export default function CreateSurveyPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validate title
+    if (!title.trim()) {
+      setTitleError(true)
+      return
+    }
+    
     setIsLoading(true)
     setError('')
 

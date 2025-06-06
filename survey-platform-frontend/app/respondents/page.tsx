@@ -77,30 +77,31 @@ export default function RespondentsPage() {
   const [newSegmentName, setNewSegmentName] = useState("")
   const [newSegmentDescription, setNewSegmentDescription] = useState("")
   const [selectedSegment, setSelectedSegment] = useState<any | null>(null)
-  const [respondents, setRespondents] = useState<Respondent[]>([])
+  // const [respondents, setRespondents] = useState<Respondent[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchRespondents()
+    // fetchRespondents()
   }, [])
 
-  const fetchRespondents = async () => {
-    try {
-      const response = await apiClient.getRespondents({
-        search: searchQuery
-      })
-      setRespondents(response.data.respondents)
-    } catch (error) {
-      handleApiError(error)
-      setError('Failed to fetch respondents')
-    } finally {
-      setLoading(false)
-    }
-  }
+  // const fetchRespondents = async () => {
+  //   try {
+  //     console.log('getting respondents using query: ',searchQuery);
+  //     const response = await apiClient.getRespondents({
+  //       search: searchQuery
+  //     })
+  //     console.log('response: ',response);
+  //     setRespondents(response.data.respondents)
+  //   } catch (error) {
+  //     handleApiError(error)
+  //     setError('Failed to fetch respondents')
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
 
   // Mock data for respondents
-  /*
   const respondents = [
     {
       id: "1",
@@ -509,7 +510,7 @@ export default function RespondentsPage() {
       },
     },
   ]
-  */
+
 
   // Mock data for segments
   const segments = [

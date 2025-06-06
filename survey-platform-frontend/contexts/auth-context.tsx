@@ -51,9 +51,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (email: string, password: string, name: string) => {
     try {
+      console.log('running register')
       const response = await apiClient.register(email, password, name)
       
-      localStorage.setItem('token', response.data.token)
+      console.log("client setting token1: ",response)
+      localStorage.setItem('token', response.token)
       localStorage.setItem('user', JSON.stringify(response.data.user))
       setUser(response.data.user)
     } catch (error) {
