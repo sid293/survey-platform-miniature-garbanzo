@@ -5,6 +5,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import TopNavbar from "@/components/top-navbar"
 import HelpButton from "@/components/help-button"
+import { AuthProvider } from "@/contexts/auth-context"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -23,11 +24,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="flex min-h-screen flex-col">
-            <TopNavbar />
-            <main className="flex-1 flex flex-col">{children}</main>
-            <HelpButton />
-          </div>
+          <AuthProvider>
+            <div className="flex min-h-screen flex-col">
+              <TopNavbar />
+              <main className="flex-1 flex flex-col">{children}</main>
+              <HelpButton />
+            </div>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

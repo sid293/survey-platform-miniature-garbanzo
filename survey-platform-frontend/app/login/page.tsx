@@ -15,10 +15,11 @@ import { ChevronLeft, ClipboardCheck } from "lucide-react"
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [name, setName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
-  const { login } = useAuth()
+  const { login, register } = useAuth()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,7 +30,24 @@ export default function LoginPage() {
       await login(email, password)
       router.push('/')
     } catch (error) {
+      handleApiError(error)
       setError('Invalid email or password')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError('')
+
+    try {
+      await register(email, password, name)
+      router.push('/')
+    } catch (error) {
+      handleApiError(error)
+      setError('Failed to create account')
     } finally {
       setIsLoading(false)
     }
@@ -68,7 +86,14 @@ export default function LoginPage() {
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="name@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <Input 
+                      id="email" 
+                      type="email" 
+                      placeholder="name@example.com" 
+                      required 
+                      value={email} 
+                      onChange={(e) => setEmail(e.target.value)} 
+                    />
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
@@ -77,12 +102,18 @@ export default function LoginPage() {
                         Forgot password?
                       </Link>
                     </div>
-                    <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <Input 
+                      id="password" 
+                      type="password" 
+                      required 
+                      value={password} 
+                      onChange={(e) => setPassword(e.target.value)} 
+                    />
                   </div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="flex flex-col space-y-4">
                   {error && (
-                    <div className="text-red-500 text-sm text-center">{error}</div>
+                    <div className="text-red-500 text-sm text-center w-full">{error}</div>
                   )}
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? "Signing in..." : "Sign In"}
@@ -94,7 +125,7 @@ export default function LoginPage() {
 
           <TabsContent value="register">
             <Card>
-              <form onSubmit={handleLogin}>
+              <form onSubmit={handleRegister}>
                 <CardHeader>
                   <CardTitle>Create an account</CardTitle>
                   <CardDescription>Enter your information to create an account</CardDescription>
@@ -102,18 +133,40 @@ export default function LoginPage() {
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Name</Label>
-                    <Input id="name" placeholder="Your name" required />
+                    <Input 
+                      id="name" 
+                      placeholder="Your name" 
+                      required 
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="name@example.com" required />
+                    <Label htmlFor="register-email">Email</Label>
+                    <Input 
+                      id="register-email" 
+                      type="email" 
+                      placeholder="name@example.com" 
+                      required 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input id="password" type="password" required />
+                    <Label htmlFor="register-password">Password</Label>
+                    <Input 
+                      id="register-password" 
+                      type="password" 
+                      required 
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
                   </div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="flex flex-col space-y-4">
+                  {error && (
+                    <div className="text-red-500 text-sm text-center w-full">{error}</div>
+                  )}
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? "Creating account..." : "Create Account"}
                   </Button>
