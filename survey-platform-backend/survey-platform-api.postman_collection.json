@@ -1,0 +1,381 @@
+{
+	"info": {
+		"_postman_id": "your-collection-id",
+		"name": "Survey Platform API",
+		"description": "API collection for the Survey Platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"securepassword123\",\n    \"name\": \"John Doe\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"securepassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/me",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "me"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Surveys",
+			"item": [
+				{
+					"name": "List Surveys",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/surveys?page=1&limit=10&status=active",
+							"host": ["{{base_url}}"],
+							"path": ["surveys"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "status",
+									"value": "active"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Survey",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Customer Satisfaction Survey\",\n    \"description\": \"Help us improve our products and services\",\n    \"questions\": [\n        {\n            \"id\": \"q1\",\n            \"type\": \"single-choice\",\n            \"question\": \"How satisfied are you with our service?\",\n            \"options\": [\"Very Satisfied\", \"Satisfied\", \"Neutral\", \"Dissatisfied\", \"Very Dissatisfied\"],\n            \"required\": true\n        },\n        {\n            \"id\": \"q2\",\n            \"type\": \"long-text\",\n            \"question\": \"What can we improve?\",\n            \"required\": false\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/surveys",
+							"host": ["{{base_url}}"],
+							"path": ["surveys"]
+						}
+					}
+				},
+				{
+					"name": "Get Survey",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/surveys/:id",
+							"host": ["{{base_url}}"],
+							"path": ["surveys", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "survey_id_here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Survey",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated Survey Title\",\n    \"description\": \"Updated description\",\n    \"questions\": []\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/surveys/:id",
+							"host": ["{{base_url}}"],
+							"path": ["surveys", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "survey_id_here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Survey",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/surveys/:id",
+							"host": ["{{base_url}}"],
+							"path": ["surveys", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "survey_id_here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Publish Survey",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/surveys/:id/publish",
+							"host": ["{{base_url}}"],
+							"path": ["surveys", ":id", "publish"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "survey_id_here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Public Survey",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/surveys/:id/public",
+							"host": ["{{base_url}}"],
+							"path": ["surveys", ":id", "public"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "survey_id_here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Submit Survey Response",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"respondent\": {\n        \"email\": \"customer@example.com\",\n        \"name\": \"Jane Smith\"\n    },\n    \"answers\": {\n        \"q1\": \"Very Satisfied\",\n        \"q2\": \"Great service, keep it up!\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/surveys/:id/responses",
+							"host": ["{{base_url}}"],
+							"path": ["surveys", ":id", "responses"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "survey_id_here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Survey Responses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/surveys/:id/responses?page=1&limit=10",
+							"host": ["{{base_url}}"],
+							"path": ["surveys", ":id", "responses"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "survey_id_here"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Respondents",
+			"item": [
+				{
+					"name": "List Respondents",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/respondents?page=1&limit=10&search=john",
+							"host": ["{{base_url}}"],
+							"path": ["respondents"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "search",
+									"value": "john"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Respondent",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/respondents/:id",
+							"host": ["{{base_url}}"],
+							"path": ["respondents", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "respondent_id_here"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3001"
+		},
+		{
+			"key": "token",
+			"value": "your_jwt_token_here"
+		}
+	]
+} 
